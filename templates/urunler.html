@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ baslik }} Ürünleri</title>
+    <style>
+        body { 
+            background-color: #ea408f; color: white; font-family: 'Courier New', Courier, monospace;
+            padding: 20px;
+        }
+        h1 { text-align: center; color: #ffcc00; }
+        .urun-listesi { display: flex; flex-direction: column; gap: 15px; max-width: 600px; margin: 0 auto; }
+        .urun-kart {
+            display: flex; align-items: center; background-color: #333;
+            border: 2px solid #555; padding: 10px;
+        }
+        .urun-foto { width: 50px; height: 50px; margin-right: 15px; border: 1px solid white; object-fit: cover; }
+        .urun-bilgi { flex-grow: 1; }
+        .urun-isim { font-weight: bold; color: #ffcc00; }
+        .urun-degerler { font-size: 0.8rem; color: #ccc; }
+        .ekle-buton {
+            background-color: #28a745; color: white; border: none; 
+            padding: 8px 15px; cursor: pointer; font-family: inherit;
+        }
+        .ekle-buton:hover { background-color: #218838; }
+        .geri-link { display: block; margin-bottom: 20px; color: #ffcc00; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <a href="/" style="color: #ffcc00; text-decoration: none;"><- Ana Menü</a>
+    <h1>{{ baslik }} Seçenekleri</h1>
+    
+    <div class="urun-listesi">
+        {% for urun in urunler %}
+        <div class="urun-kart">
+            <img src="/{{ urun[5] }}" alt="{{ urun[2] }}" class="urun-foto">
+            
+            <div class="urun-bilgi">
+                <div class="urun-isim">{{ urun[2] }}</div>
+                <div class="urun-degerler">100gr: {{ urun[3] }} kcal | {{ urun[4] }}g protein</div>
+            </div>
+            
+            <form action="/ogun-ekle" method="POST" style="display: flex; gap: 5px;">
+    <input type="hidden" name="urun_id" value="{{ urun[0] }}">
+    
+    <input type="number" name="gramaj" placeholder="Gram" required 
+           style="width: 60px; background: #222; color: white; border: 1px solid #555;">
+    
+    <select name="ogun_tipi" style="background: #222; color: white; border: 1px solid #555;">
+        <option value="Sabah">Sabah</option>
+        <option value="Öğle">Öğle</option>
+        <option value="Akşam">Akşam</option>
+        <option value="Atıştırmalık">Atıştırmalık</option>
+    </select>
+    
+    <button type="submit" class="ekle-buton">Ekle</button>
+</form>
+        </div>
+        {% endfor %}
+    </div>
+
+</body>
+</html>

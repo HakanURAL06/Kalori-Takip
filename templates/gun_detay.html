@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ tarih }} Raporu</title>
+    <style>
+        body { background: #ea408f; color: #ffcc00; font-family: 'Courier New', monospace; padding: 20px; }
+        .rapor-kart { border: 4px solid #fff; background: #222; padding: 20px; max-width: 600px; margin: 0 auto; box-shadow: 8px 8px 0px #000; }
+        .kayit-satir { border-bottom: 1px solid #444; padding: 10px 0; display: flex; align-items: center; justify-content: space-between; }
+        .pixel-img { width: 32px; height: 32px; image-rendering: pixelated; margin-right: 15px; border: 1px solid #ffcc00; }
+        
+        .ozet-tablo { margin-top: 25px; padding: 15px; border-top: 4px double #ffcc00; display: grid; grid-template-columns: repeat(4, 1fr); text-align: center; gap: 10px; background: #111; }
+        .ozet-baslik { font-size: 0.7rem; color: #ffcc00; font-weight: bold; margin-bottom: 5px; }
+        .ozet-deger { font-size: 1.1rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <a href="/gecmis" style="color: #ffcc00; text-shadow: 2px 2px #0000;"><- GEÇMİŞ LİSTESİ</a>
+    
+    <div class="rapor-kart">
+        <h2 style="text-align: center; border-bottom: 2px solid #ffcc00; padding-bottom: 10px;">{{ tarih }} ANALİZİ</h2>
+        
+        {% set t_kcal = [] %}{% set t_prot = [] %}{% set t_yag = [] %}{% set t_karb = [] %}
+
+        {% for k in kayitlar %}
+            {% set kcal = ((k.kalori / 100) * k.gramaj)|round(1) %}
+            {% set prot = ((k.protein / 100) * k.gramaj)|round(1) %}
+            {% set yag = ((k.yag / 100) * k.gramaj)|round(1) %}
+            {% set karb = ((k.karbonhidrat / 100) * k.gramaj)|round(1) %}
+            
+            {% do t_kcal.append(kcal) %}{% do t_prot.append(prot) %}
+            {% do t_yag.append(yag) %}{% do t_karb.append(karb) %}
+
+            <div class="kayit-satir">
+                <div style="display: flex; align-items: center;">
+                    <img src="/static/{{ k.foto_yolu }}" class="pixel-img">
+                    <div>
+                        <strong>{{ k.marka_isim }}</strong> ({{ k.gramaj }}g)<br>
+                        <span style="font-size: 0.7rem; color: #aaa;">P: {{ prot }}g | Y: {{ yag }}g | K: {{ karb }}g</span>
+                    </div>
+                </div>
+                <div style="color: #ff4444; font-weight: bold;">{{ kcal }} kcal</div>
+            </div>
+        {% endfor %}
+
+        <div class="ozet-tablo">
+            <div><div class="ozet-baslik">KALORİ</div><div class="ozet-deger" style="color: #ff4444;">{{ t_kcal|sum|round(1) }}</div></div>
+            <div><div class="ozet-baslik">PROTEİN</div><div class="ozet-deger" style="color: #44aaff;">{{ t_prot|sum|round(1) }}g</div></div>
+            <div><div class="ozet-baslik">YAĞ</div><div class="ozet-deger" style="color: #ffcc00;">{{ t_yag|sum|round(1) }}g</div></div>
+            <div><div class="ozet-baslik">KARBO</div><div class="ozet-deger" style="color: #44ff44;">{{ t_karb|sum|round(1) }}g</div></div>
+        </div>
+    </div>
+</body>
+</html>
