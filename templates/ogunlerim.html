@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Öğün Ekle / Gör</title>
+    <style>
+        body { background: #ea408f; color: #fff; font-family: 'Courier New', monospace; padding: 20px; margin: 0; }
+        
+        .ust-link { color: #ffcc00; text-decoration: none; font-weight: bold; margin-bottom: 20px; display: inline-block; }
+        h1 { text-align: center; color: #ffcc00; text-shadow: 3px 3px #000; margin-bottom: 30px; }
+
+        .ogun-blok { border: 4px solid #000; padding: 20px; margin-bottom: 25px; background: #ffcc00; color: #000; box-shadow: 8px 8px 0px #000; }
+        .ogun-baslik { display: flex; align-items: center; gap: 15px; border-bottom: 3px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
+        .pixel-ikon { width: 48px; height: 48px; image-rendering: pixelated; }
+
+        .kayit-listesi { margin-top: 10px; }
+        .kayit-satir { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: #222; 
+            padding: 10px; 
+            margin-top: 8px; 
+            color: #ffffff !important; 
+            border: 2px solid #000;
+        }
+        .kayit-bilgi { display: flex; align-items: center; gap: 10px; }
+        .urun-mini-foto { width: 32px; height: 32px; image-rendering: pixelated; object-fit: contain; }
+        .sil-link { color: #ff4444; text-decoration: none; font-weight: bold; padding: 5px 10px; border: 1px solid #ff4444; }
+        .sil-link:hover { background: #ff4444; color: #fff; }
+
+    
+        .ekleme-formu { background: #1a1a1a; padding: 15px; margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap; border: 2px solid #fff; }
+        select, input, button { background: #333; color:#fff; border: 1px solid #fff; padding: 8px; font-family: inherit; }
+        .tur-filtre { border: 2px solid #ffcc00; color: #ffcc00; font-weight: bold; }
+        button { background: #28a745; cursor: pointer; font-weight: bold; border: none; flex-grow: 1; }
+        button:hover { background: #218838; }
+    </style>
+</head>
+<body>
+    <a href="/" class="ust-link"><- Ana Menü</a>
+    <h1>BUGÜNÜN GÜNLÜĞÜ ({{ tarih }})</h1>
+
+    {% for isim in ['Sabah', 'Öğle', 'Akşam', 'Atıştırmalık'] %}
+    <div class="ogun-blok">
+        <div class="ogun-baslik">
+            {% if isim == 'Sabah' %}<img src="/static/assets/ikon_sabah.png" class="pixel-ikon">
+            {% elif isim == 'Öğle' %}<img src="/static/assets/ikon_ogle.png" class="pixel-ikon">
+            {% elif isim == 'Akşam' %}<img src="/static/assets/ikon_aksam.png" class="pixel-ikon">
+            {% else %}<img src="/static/assets/ikon_atistirmalik.png" class="pixel-ikon">{% endif %}
+            <h2 style="margin: 0;">{{ isim|upper }}</h2>
+        </div>
+
+        <div class="kayit-listesi">
+            {% for k in kayitlar if k.ogun == isim %}
+            <div class="kayit-satir">
+                <div class="kayit-bilgi">
+                    <img src="/static/{{ k.foto_yolu }}" class="urun-mini-foto">
+                    <span>
+                        {{ k.marka_isim }} ({{ k.gramaj }}g) -> 
+                        <strong style="color: #ffcc00;">{{ ((k.kalori/100)*k.gramaj)|round(1) }} kcal</strong>
+                    </span>
+                </div>
+                <a href="{{ url_for('kayit_sil', kayit_id=k.id) }}" class="sil-link" onclick="return confirm('Bu kaydı silmek istediğine emin misin?')">X</a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <form action="/kaydet" method="POST" class="ekleme-formu">
+            <input type="hidden" name="ogun_ismi" value="{{ isim }}">
+            
+            <select class="tur-filtre" onchange="filtrele(this)">
+                <option value="">TÜR SEÇİN (TÜMÜ)</option>
+                {% for t in turler %}
+                <option value="{{ t.id }}">{{ t.tur_adi|upper }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="urun_id" class="urun-select" required style="flex-grow: 2;">
+                <option value="">ÜRÜN SEÇİN...</option>
+                {% for u in urunler_hepsi %}
+                <option value="{{ u.id }}" data-turler="{{ u.tur_ids }}">{{ u.marka_isim }}</option>
+                {% endfor %}
+            </select>
+
+            <input type="number" step="0.1" name="gramaj" placeholder="Gram" required style="width: 80px;">
+            <button type="submit">EKLE</button>
+        </form>
+    </div>
+    {% endfor %}
+
+    <script>
+    function filtrele(selectElement) {
+        const secilenTurId = selectElement.value.toString();
+        const form = selectElement.closest('.ekleme-formu');
+        const urunSelect = form.querySelector('.urun-select');
+        const options = urunSelect.options;
+
+        for (let i = 0; i < options.length; i++) {
+            const opt = options[i];
+            const urunTurleri = opt.getAttribute('data-turler') ? opt.getAttribute('data-turler').split(',') : [];
+
+            if (secilenTurId === "" || urunTurleri.includes(secilenTurId)) {
+                opt.hidden = false;
+                opt.disabled = false;
+                opt.style.display = "block";
+            } else {
+                if (opt.value !== "") {
+                    opt.hidden = true;
+                    opt.disabled = true;
+                    opt.style.display = "none";
+                }
+            }
+        }
+        urunSelect.value = ""; 
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+# Virtual environment
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS files
+.DS_Store
+
+# Logs
+*.log
+log.txt
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+static/uploads/*
+!static/uploads/.gitkeep

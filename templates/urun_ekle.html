@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Yeni Ürün Ekle</title>
+    <style>
+        body { background: #ea408f; color: #fff; font-family: 'Courier New', monospace; padding: 20px; }
+        .form-kutu { background: #222; border: 4px solid #fff; padding: 25px; max-width: 550px; margin: 40px auto; box-shadow: 10px 10px 0px #000; }
+        
+      
+        .tur-liste { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 10px; 
+            background: #2a2a2a; 
+            padding: 15px; 
+            border: 2px solid #555; 
+            margin: 15px 0;
+            text-align: left; 
+        }
+        
+        .tur-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; cursor: pointer; }
+        .tur-item input { width: auto; margin: 0; cursor: pointer; }
+
+        input[type="text"], input[type="number"], input[type="file"] { 
+            width: 100%; padding: 10px; margin: 8px 0; background: #333; border: 2px solid #555; color: #fff; box-sizing: border-box; 
+        }
+        
+        .makro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        button { width: 100%; background: #28a745; color: #fff; padding: 15px; font-weight: bold; border: none; cursor: pointer; margin-top: 15px; }
+        button:hover { background: #218838; }
+    </style>
+</head>
+<body>
+    <a href="/" style="color: #ffcc00; text-decoration: none; position: absolute; top: 20px; left: 20px;"><- Ana Menü</a>
+    
+    <div class="form-kutu">
+        <h2 style="text-align: center; color: #ffcc00;">YENİ ÜRÜN EKLE</h2>
+        <form method="POST" enctype="multipart/form-data" autocomplete="off">
+            <input type="text" name="marka" placeholder="Ürün İsmi" required>
+            
+            <p style="font-size: 0.8rem; color: #ffcc00; margin-bottom: 5px;">Ürün Türlerini Seçin:</p>
+            <div class="tur-liste">
+                {% for t in turler %}
+                <label class="tur-item">
+                    <input type="checkbox" name="turler" value="{{ t.id }}"> {{ t.tur_adi }}
+                </label>
+                {% endfor %}
+            </div>
+
+            <div class="makro-grid">
+                <input type="number" step="0.01" name="kalori" placeholder="Kalori" required>
+                <input type="number" step="0.01" name="protein" placeholder="Protein" required>
+                <input type="number" step="0.01" name="yag" placeholder="Yağ" required>
+                <input type="number" step="0.01" name="karbonhidrat" placeholder="Karbonhidrat" required>
+                <input type="number" step="0.01" name="seker" placeholder="Şeker">
+                <input type="number" step="0.01" name="lif" placeholder="Lif">
+                <input type="number" step="0.01" name="tuz" placeholder="Tuz">
+
+            </div>
+            
+            <input type="file" name="foto">
+            <button type="submit">ÜRÜNÜ KAYDET</button>
+        </form>
+    </div>
+</body>
+</html>

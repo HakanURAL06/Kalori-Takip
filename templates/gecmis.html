@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Geçmiş Günlük</title>
+    <style>
+        body { background: #ea408f; color: #ffcc00; font-family: 'Courier New', monospace; margin: 0; padding: 0; }
+        
+        .ust-bar { padding: 20px; text-align: left; }
+        .ana-menu-link { color: #ffcc00; text-decoration: none; font-weight: bold; font-size: 1.1rem; }
+        .ana-menu-link:hover { text-decoration: underline; }
+
+        .icerik { text-align: center; padding: 20px; }
+        h1 { text-shadow: 3px 3px #000; margin-bottom: 30px; }
+
+        .liste { display: flex; flex-direction: column; gap: 15px; align-items: center; }
+        
+        .tarih-kart { 
+            border: 4px solid #fff; 
+            background: #222; 
+            padding: 20px; 
+            width: 320px; 
+            text-decoration: none; 
+            color: #ffcc00; 
+            font-weight: bold; 
+            box-shadow: 6px 6px 0px #000;
+            transition: 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .tarih-kart:hover { 
+            background: #444; 
+            transform: scale(1.05); 
+            border-color: #ffcc00;
+        }
+    </style>
+</head>
+<body>
+    <div class="ust-bar">
+        <a href="/" class="ana-menu-link"><- Ana Menü</a>
+    </div>
+
+    <div class="icerik">
+        <h1>GEÇMİŞ GÜNLÜK</h1>
+        
+        <div class="liste">
+            {% for t in tarihler %}
+            <a href="/gecmis/{{ t.tarih }}" class="tarih-kart">
+                📅 {{ t.tarih }} ANALİZİ
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
